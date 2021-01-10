@@ -1,0 +1,39 @@
+﻿version: "3.8"
+
+services:
+  app:
+    build: .
+    image: samp.compose:latest
+    volumes:
+      - ./SimpleApplication/:c:/inetpub/wwwroot
+    ports:
+      - "83:80"
+      - "84:443"
+    networks:
+      app-network:
+        ipv4_address: 10.5.0.5
+    depends_on:
+      - db
+    hostname: samp
+    
+  db:
+    image: microsoft/mssql-server-windows-express
+    networks:
+      - app-network
+    ports:
+      - "1433:1433"
+    environment:
+      - sa_password=LOL_551502
+      - ACCEPT_EULA=Y
+    hostname: dockerdb
+    
+networks:
+  app-network:
+    driver: nat
+    ipam:
+      config:
+        - subnet: 10.5.0.0/16
+          gateway: 10.5.0.1
+      
+    
+    

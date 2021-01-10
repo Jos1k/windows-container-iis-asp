@@ -1,0 +1,16 @@
+FROM mcr.microsoft.com/windows/servercore/iis
+
+ADD https://aka.ms/vs/16/release/RemoteTools.amd64ret.enu.exe /VS_RemoteTools.exe
+
+RUN VS_RemoteTools.exe /install /quiet /norestart
+RUN del VS_RemoteTools.exe
+
+RUN powershell -command Remove-Item -Recurse C:\inetpub\wwwroot\*
+RUN powershell -command Install-WindowsFeature NET-Framework-45-ASPNET
+RUN powershell -command Install-WindowsFeature Web-Asp-Net45
+
+WORKDIR /inetpub/wwwroot
+
+RUN icacls "c:/inetpub/wwwroot" /grant "Everyone:(OI)(CI)M"
+
+ENTRYPOINT ["C:\\Program Files\\Microsoft Visual Studio 16.0\\Common7\\IDE\\Remote Debugger\\x64\\msvsmon.exe", "/noauth", "/anyuser", "/silent", "/nostatus", "/noclrwarn", "/nosecuritywarn", "/nofirewallwarn", "/nowowwarn"]
