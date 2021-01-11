@@ -4,8 +4,6 @@ services:
   app:
     build: .
     image: samp.compose:latest
-    # volumes:
-    #   - ./SimpleApplication/:c:/inetpub/wwwroot
     ports:
       - "83:80"
       - "84:443"

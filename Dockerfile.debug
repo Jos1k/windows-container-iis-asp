@@ -1,7 +1,12 @@
 FROM mcr.microsoft.com/windows/servercore/iis
 
-ADD https://aka.ms/vs/16/release/RemoteTools.amd64ret.enu.exe /VS_RemoteTools.exe
+ADD https://nodejs.org/dist/v12.4.0/node-v12.4.0-win-x64.zip /nodejs.zip
+RUN powershell -command Expand-Archive nodejs.zip -DestinationPath C:\; 
+RUN powershell Rename-Item "C:\\node-v12.4.0-win-x64" c:\nodejs
+RUN SETX PATH C:\nodejs
+RUN del nodejs.zip
 
+ADD https://aka.ms/vs/16/release/RemoteTools.amd64ret.enu.exe /VS_RemoteTools.exe
 RUN VS_RemoteTools.exe /install /quiet /norestart
 RUN del VS_RemoteTools.exe
 
